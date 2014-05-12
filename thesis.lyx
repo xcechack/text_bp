@@ -130,9 +130,46 @@ DeclarationText
 AdvisorName
 \end_layout
 
+\begin_layout Plain Layout
+
+\end_layout
+
 \end_inset
 
 
+\end_layout
+
+\begin_layout Chapter*
+Poděkování
+\end_layout
+
+\begin_layout Chapter*
+Shrnutí
+\end_layout
+
+\begin_layout Standard
+Systém Perun spravuje uživatelské identity, virtuální organizace a jejich
+ přístup ke službám.
+ Skládá se z několika komponent, mezi které se řadí také Perun Engine, který
+ má na starost propagaci změn v systému Perun na jednotlivé stroje.
+ Cílem této práce bylo navrhnout monitorovací rozhraní, které umožní přístup
+ k informacím o vnitřních procesech Perun Engine, které jsou v původním
+ návrhu neviditelné a nepřístupné.
+ V práci byly řešeny otázky přístupu k informacím z externích implementací,
+ které Perun Engine využívá.
+ Dále byly v řešení uváženy návrhy na vhodnou organizaci těchto procesů
+ v Perun Engine, aby bylo možné tyto informace přehledně poskytnout.
+ Hlavním přínosem této práce je přehlednost a větší dohled nad vnitřními
+ procesy Perun Engine, což umožňuje např.
+ snazší zachycení potencionálních chyb.
+\end_layout
+
+\begin_layout Chapter*
+Klíčová slova
+\end_layout
+
+\begin_layout Standard
+Perun, monitoring, Task Executor, správa událostí
 \end_layout
 
 \begin_layout Standard
@@ -160,6 +197,10 @@ MainMatter
 \end_inset
 
 
+\end_layout
+
+\begin_layout Chapter
+Úvod
 \end_layout
 
 \begin_layout Chapter
@@ -535,6 +576,37 @@ komponenty Peruna
  Dispatcher a Engine jsou zodpovědni za distribuování seznamů přístupů a
  konfigurací dále konečným službám.
  
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename diagramy/perun_structure.png
+	width 13cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Struktura systému Perun
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
@@ -831,6 +903,10 @@ class Runnable
  Implementace tohoto rozhraní může využít všechny typy odlišných strategií
  spouštění, např.
  synchronní, asynchronní, spouštění s využitím thread poolu a další.
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -852,6 +928,10 @@ Task Executor Spring
  tzv.
  Thread pool a tato implementace nese stejnojmenný název Thread Pool Task
  Executor.
+\begin_inset VSpace bigskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -869,11 +949,22 @@ Většina Task Executorů, které jsou určeny pro asynchronní spouštění, vy
  frontě Task Executoru na dokončení některé z běžích úloh a následného uvolnění
  místa v thread poolu.
  Uvolněné místo posléze zabere úloha, která čekala ve frontě nejdéle.
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 Můžeme tedy říci, že maximální velikost Thread poolu je shodná s maximálním
  možným počtem úloh, které mohou být najednou spuštěny.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -885,12 +976,20 @@ Thread Pool Task Executor je třída frameworku Spring, která využívá thread
  pool a umožňuje konfiguraci asynchronního spouštění úloh.
  Tato implementace rozhraní Task Executor může být použita pouze v prostředí
  Java 5 a v tomto prostředí se jedná o nejvíce využívanou implementaci.
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 Thread Pool Task Executor má tři základní parametry, na základě kterých
  řídí spouštění úloh.
  Jedná se konkrétně o Core Pool Size, Queue Capacity a Maximum Pool Size.
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -903,6 +1002,10 @@ Core Pool Size
  Core Pool Size také definuje velikost thread poolu.
  Pokud je počet úloh vyšší než Core Pool Size, jsou přebývající úlohy drženy
  v interní frontě
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -912,6 +1015,10 @@ Queue Capacity
 \shape default
 : číselná konstanta, která reprezentuje maximální počet úloh, které je možné
  držet v interní frontě, dokud se neuvolní místo v thread poolu.
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -926,7 +1033,7 @@ Maximum Pool Size
  Tento parametr reprezentuje maximální počet běžících úloh a upravuje velikost
  thread poolu.
  
-\begin_inset VSpace defskip
+\begin_inset Newpage newpage
 \end_inset
 
 
@@ -934,7 +1041,7 @@ Maximum Pool Size
 
 \begin_layout Standard
 \begin_inset Float figure
-placement h
+placement H
 wide false
 sideways false
 status open
@@ -942,7 +1049,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Graphics
 	filename diagramy/task executor.png
-	width 9cm
+	width 12cm
 
 \end_inset
 
@@ -958,13 +1065,20 @@ Zpracování Workerů Task Executorem
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Srovnání s Thread Pool Executorem
 \end_layout
 
 \begin_layout Standard
@@ -998,6 +1112,10 @@ Thread Pool Executor Java
  Systém Perun navíc masivně využívá ke svému fungování framework Spring,
  proto je z důvodu přehlednosti a srozumitelnosti vhodné při vývoji udržet
  programátorskou jednotnost.
+\begin_inset VSpace bigskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -1011,24 +1129,47 @@ Při návrhu na monitoring Task Executoru bylo v první řadě uváženo, o čem
  a to:
 \end_layout
 
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
 \begin_layout Itemize
 Veškeré informace o úlohách, např.
  typ úlohy (generující nebo zasílající), ID služby, pro kterou byla úloha
  naplánovana, stav úlohy (čekající na spuštění, právě probíhající nebo dokončena
 ), atd.
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
 Počet úloh, které jsou právě umístěny v thread poolu a informace o nich
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
 Počet úloh, které čekají na spuštění ve frontě a jejich pořadí a informace
  o nich
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
 Informace o dokončených úlohách, jejich úspěšnosti a také doby trvání běhu
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1044,6 +1185,10 @@ Návrh řešení
 U různých návrhů řešení se můžeme v diagramech i v textu setkat s pojmy,
  které je třeba pro ujasnění předem definovat a případně odlišit.
  Rozlišujme je striktně podle tohoto pojmenování:
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -1053,6 +1198,10 @@ Task Executor Engine
 \shape default
  - Součást komponenty Perun Engine, která spravuje Task Executor.
  
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -1063,6 +1212,10 @@ Task Executor
  - Rozhraní pro třídu Thread Pool Task Executor, která má na starost samotné
  spouštění úloh.
  
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -1089,6 +1242,10 @@ Jako první myšlenka se naskytl návrh na vývoj samostatné komponenty Task
  Executor Monitoring, která bude komunikovat s Task Executor Engine a samotnými
  Workery.
  
+\begin_inset VSpace bigskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1135,6 +1292,10 @@ Task Executor Engine vytvoří nové instance Workerů a zasílá je na spuště
  informace o tom, zda bylo spuštění úspěšné a v jakém čase skončilo.
  Tyto informace se ukládají do úlohy neboli Tasku, ze které byl tento Worker
  vytvořen.
+\begin_inset VSpace bigskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section*
@@ -1146,6 +1307,13 @@ Mimo Task Executor byla v návrhu postavena nová samostatná komponenta Task
  Executor Monitoring, která dostávala oznámení z Task Executor Engine o
  zaslání Workeru do Task Executoru.
  
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
@@ -1192,6 +1360,10 @@ Po uvolnění místa v kolekci běžících úloh bylo toto místo ihned zaplně
  informace o Workerech, které právě běží, čekají ve frontě nebo jsou již
  dokončeny.
  
+\begin_inset VSpace bigskip
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -1207,6 +1379,10 @@ Tento první návrh monitoringu se při testování ukázal jako velmi náchyln�
  V tom mu pomáhají hlášení Task Executor Engine o zaslání Workeru ke spouštění
  a také hlášení samotných Workerů o dokončení svého běhu, ale nejedná se
  o monitoring samotného Task Executoru.
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1215,6 +1391,10 @@ Druhým nedostatkem bylo neuvážení možnosti zaplnění celé fronty a proto
  thread poolu, v tomto případě kapacitu kolekce, do níž ukládáme běžící
  Workery, na velikost Maximum Pool Size.
  
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1235,10 +1415,15 @@ Verze 2
 V druhém návrhu na řešení monitoringu bylo uváženo rozšíření Task Executoru,
  které by o sobě dokázalo podávat požadované informace o aktuálním i dlouhodobém
  stavu.
+\begin_inset VSpace bigskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
+placement h
 wide false
 sideways false
 status open
@@ -1283,6 +1468,13 @@ podtřída
 \end_layout
 
 \begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Task Executor Monitoring fungoval jako prostředník mezi Task Executor Engine
  a Task Executor.
  Každý Worker, který zašle Task Executor Engine ke spuštění, je tedy nejprve
@@ -1301,6 +1493,10 @@ nadtřída
  Záměrem implementace monitorovací komponenty bylo získat snadný přístup
  k metodám a atributům Task Executoru a získat z nich požadované informace
  o Workerech, které bude Task Executor Monitoring schopný vhodně interpretovat.
+\begin_inset VSpace bigskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section*
@@ -1312,6 +1508,13 @@ Získání informací, které z Task Executoru potřebujeme, můžeme rozdělit 
  tři podúlohy, a to informace o běžících Workerech, dále čekajících Workerech
  ve frontě a dokončených Workerech.
  
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
@@ -1326,6 +1529,10 @@ Prvním krokem k získání informací o Workerech bylo využití interní front
  poolu a následné spuštění.
  Tyto informace stačilo později jen přehledně zpracovat a ve vhodném formátu
  předat na výstup.
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -1339,6 +1546,10 @@ K přístupu ke všem Workerům, kteří ukončili svůj běh, byla vytvořena j
  kolekce, do které se přidal každý Worker, který oznámil komponentě Task
  Executor Monitoring svůj konec.
  Z této kolekce bylo opět možné jednoduše získat všechny požadované informace.
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -1357,6 +1568,10 @@ Problémem zůstala neviditelnost thread poolu, který obsahuje běžící Worke
  Návrhem na řešení tohoto problému bylo použití tzv.
  reflexe.
  
+\begin_inset VSpace bigskip
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -1376,11 +1591,25 @@ Termínem reflexe označujeme schopnost získat za běhu informace o typu objekt
 \end_layout
 
 \begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 V našem případě chceme získat kolekci běžících Workerů ze třídy Task Executor.
  K této třídě máme přístup, protože máme plně pod správou její podtřídu
  Task Executor Monitoring a jméno hledané kolekce je veřejně známo.
  Tímto jsme splnili předpoklad k úspěšnému provedení reflexe.
  
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section*
@@ -1404,6 +1633,10 @@ Prvním problémem bylo, že hledaná kolekce běžících Workerů je typu Hash
 ch o nich.
  Začalo se tedy přemýšlet o jednoduším způsobu, jak se k požadovaným datům
  dostat.
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -1415,6 +1648,10 @@ Druhým problém byla samotná privátní vnořená třída Worker.
  které jsou pro nás důležité.
  Tyto problémy byly hlavní příčinou od opuštění od tohoto návrhu na řešení.
  
+\begin_inset VSpace bigskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section*
@@ -1440,10 +1677,155 @@ Verze 3
 Ve třetí verzi bylo využito poznatků z předchozích verzí, které byly propojeny
  a závěrem vzniklo jednoduché, přehledné a funkční řešení pro monitoring
  Task Executoru.
+\begin_inset VSpace medskip
+\end_inset
+
+
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Využití první verze návrhu
+\end_layout
+
+\begin_layout Standard
+Z první verze návrhu na monitoring Task Executoru byl převzat nápad na vytvoření
+ nějaké pomocné kolekce, která bude určeným způsobem simulovat chování Task
+ Executoru.
+ Vylepšení této verze oproti předchozí je především v tom, že tato kolekce
+ již nebude součástí nějaké externí třídy, ale bude umístěna přímo v Task
+ Executoru Monitoring.
+ Rozšíření třídy, kterou používáme, v tomto případě Task Executor Monitoring,
+ je výrazně přehlednější i intuitivnější než původní implementace nové třídy,
+ která získávala pouze signály z ostatních komponent a ty sama zpracovávala.
+ Nově zavedená kolekce v Task Executoru Monitoring bude využívaná k ukládání
+ Workerů, kteří právě probíhají.
+ 
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Využití druhé verze návrhu
+\end_layout
+
+\begin_layout Standard
+Z druhé verze bylo ihned použito několik nápadů, které se ukázaly jako jednoduch
+é, přehledné a efektivní, ale především plně funkční.
+ 
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+První nápad, který byl využit, byl směrován na způsob ukládání informací
+ o Workerech, kteří již dokončili svůj běh.
+ Task Executor po dokončení běhu Workeru tento Worker zahazuje a dále si
+ jej nepamatuje.
+ Proto bylo nutné Task Executor rozšířit o schopnost pamatovat si všechny
+ Workery, které jím prošly.
+ Za tímto účelem byla v předchozí verzi vytvořena jednoduchá kolekce, do
+ které se Workery po dokončení svého běhu uloži.
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Druhé využití předchozí verze bylo ve způsobu získání interní fronty Task
+ Executoru.
+ Z této fronty potom snadno obdržíme všechny potřebné informace o Workerech,
+ kteří čekají v této frontě na uvolnění místa v thread poolu.
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+Požadavky na monitoring Task Executoru lze rozdělit do tří samostatných
+ úkolů, a to:
+\end_layout
+
+\begin_layout Itemize
+monitoring běžících úloh
+\end_layout
+
+\begin_layout Itemize
+monitoring čekajících úloh
+\end_layout
+
+\begin_layout Itemize
+monitoring dokončených úloh
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Pojďme si ukázat jednotlivá řešení pro tyto případy.
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Monitoring běžících úloh
+\end_layout
+
+\begin_layout Standard
+Získání informací o běžících Workerech se v druhé verzi návrhu ukázalo jako
+ nejobtížnější část monitoringu.
+ V této verzi řešení bylo k jejich získání využito veřejných metod Task
+ Executoru a to metod beforeExecute() a afterExecute()
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+metody beforeExecute() a afterExecute()
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Z dokumentace k těmto metodám, které jsou součástí Task Executoru, můžeme
+ zjistit, že metody jsou volány bezprostředně před spuštěním Workeru a také
+ bezprostředně jeho dokončení jeho běhu, jak už vyplývá také z názvů těchto
+ metod.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
+placement H
 wide false
 sideways false
 status open
@@ -1467,6 +1849,97 @@ Třetí návrh
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Metody beforeExecute() a afterExecute() jsou v původní implementaci Task
+ Executoru prázdné - byly vytvořeny především za účelem dalšího rozšíření
+ Task Executoru.
+ Využití těchto metod tedy bylo vcelku jednoduché.
+ V podstatě stačilo zaznamenat průchod Workera těmito metodami a následně
+ ho podle toho přiřadit do odpovídající kolekce, ze které o něm budou vypisovány
+ informace.
+ Po zavolání funkce beforeExecute() se Worker ihned přidá do nové kolekce
+ pro běžící úlohy a po zavolání funkce afterExecute() tuto kolekci opouští.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Subsection
+Monitoring čekajících úloh
+\end_layout
+
+\begin_layout Standard
+Nápad na monitorování úloh, které čekají ve frontě na uvolnění místa, byl
+ převzat z druhé verze návrhu.
+ Task Executor umožňuje získání interní fronty pomocí metody getQueue()
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+getQueue
+\end_layout
+
+\end_inset
+
+ a z té jsme schopni v případě potřeby získat veškeré požadované informace.
+ Pokud se navíc informace z interní fronty Task Executoru shodují s informacemi,
+ které očekáváme a nevyskytují se žádné duplicity úloh atd.
+ v jiných kolekcích, které jsme v Task Executoru dodatečně vytvořili, máme
+ dobrou kontrolu správnosti naší práce.
+ Interní fronta nám je schopna poskytnout veškeré informace, které potřebujeme,
+ proto zde není třeba žádných dalších doplňků.
+\end_layout
+
+\begin_layout Subsection
+Monitoring dokončených úloh
+\end_layout
+
+\begin_layout Standard
+Úlohy, které dokončí v Task Executoru svůj běh, je nutné nějakým způsobem
+ uchovat.
+ Task Executor dokončené Workery zahazuje a dále si je již nepamatuje.
+ Proto byla na základě nápadu z předchozí verze vytvořena jednoduchá kolekce,
+ do které se Workery po svém dokončení ukládají.
+ Rozdíl oproti ostatním kolekcím je v tom, že Workeři v této třídě mají
+ informaci také o délce svého běhu a také své úspěšnosti.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+K přidání dokončeného Workeru bylo opět, stejně jako u běžících úloh, využito
+ metody afterExecute().
+ Jak již bylo řečeno, metoda afterExecute() je volána bezprostředně po dokončení
+ běhu Workeru.
+ Proto je tato metoda doplněna o novou funkcionalitu, kdy se každý Worker,
+ který touto metodou projde, uloží do kolekce dokončených Workerů.
+\begin_inset Newpage newpage
 \end_inset
 
 
