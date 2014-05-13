@@ -1226,6 +1226,7 @@ Worker
 - Typický objekt Task Executoru, který reprezentuje úlohu.
  Worker vzniká v Task Executor Engine a je vytvořen z úlohy neboli Tasku
  .
+ Z jedné úlohy může vznikat více Workerů.
  Worker je v Perun Engine definovaný jako samostatná třída.
 \begin_inset Newpage newpage
 \end_inset
@@ -1754,8 +1755,9 @@ Druhé využití předchozí verze bylo ve způsobu získání interní fronty T
 \begin_inset Newpage newpage
 \end_inset
 
-Požadavky na monitoring Task Executoru lze rozdělit do tří samostatných
- úkolů, a to:
+Monitoring Task Executoru má za úkol podat informace o běžících, čekajících
+ a dokončených úlohách.
+ Jeho funkcionalitu nyní rozdělíme na tři podúkoly, a to na:
 \end_layout
 
 \begin_layout Itemize
@@ -1775,7 +1777,7 @@ monitoring dokončených úloh
 \end_layout
 
 \begin_layout Standard
-Pojďme si ukázat jednotlivá řešení pro tyto případy.
+Pojďme si ukázat návrhy na řešení monitoringu pro jednotlivé podúlohy.
 \begin_inset VSpace bigskip
 \end_inset
 
@@ -1881,7 +1883,7 @@ Metody beforeExecute() a afterExecute() jsou v původní implementaci Task
 \end_layout
 
 \begin_layout Standard
-
+
 \end_layout
 
 \begin_layout Subsection
@@ -1939,6 +1941,214 @@ K přidání dokončeného Workeru bylo opět, stejně jako u běžících úloh
  běhu Workeru.
  Proto je tato metoda doplněna o novou funkcionalitu, kdy se každý Worker,
  který touto metodou projde, uloží do kolekce dokončených Workerů.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename C:/Users/Janicka/Downloads/worker_navrh3.png
+	width 10cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Průchod Workeru jednotlivými kolekcemi
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace bigskip
+\end_inset
+
+Třetí návrh se ukázal jako vhodné řešení monitoringu.
+ Je jednoduše koncipovaný, efektivní a měl by zvládat i velkou zátěž, která
+ může být způsobena velkým počtem úloh ke zpracování.
+ Proto nyní přejdeme k samotné implementaci tohoto návrhu, kde si ukážeme
+ zajímavosti, ale také problémy, které bylo třeba řešit.
+\end_layout
+
+\begin_layout Chapter
+Implementace
+\end_layout
+
+\begin_layout Standard
+V této kapitole přejdeme k samotné implementaci návrhu na monitoring Perun
+ Engine a ukážeme si problémy, se kterými se bylo třeba v průběhu implementace
+ vypořádat.
+\end_layout
+
+\begin_layout Section
+Parametry Workeru
+\end_layout
+
+\begin_layout Standard
+Každý Worker obsahuje informace, které chceme monitorovat.
+ Mezi tyto informace patří:
+\end_layout
+
+\begin_layout Itemize
+identifikační číslo a typ úlohy (generující nebo zasílající)
+\end_layout
+
+\begin_layout Itemize
+facility, na kterou má být změna propagována (identifikační číslo, název
+ a typ)
+\end_layout
+
+\begin_layout Itemize
+status úlohy (zpracovávající se, dokončena)
+\end_layout
+
+\begin_layout Itemize
+pokud je úloha již dokončena, potom obsahuje informace také o času spuštění
+ a času dokončení běhu
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Při implementaci monitoringu jsem narazila na problém, kterým bylo získání
+ duplicitních a nejasných informací o Workerech.
+ Jak už bylo řečeno v návrhové části práce, z jedné úlohy může vzniknout
+ více Workerů.
+ Problémem je, že z údajů, které nám Worker poskytuje, není občas možné
+ Workery odlišit, protože vznikli ze stejné úlohy a jsou naplánovani na
+ stejnou facility.
+ 
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Řešením tohoto problému bylo zavedení nového parametru, který bude reprezentovat
+ identifikační číslo Workeru.
+ Každému Workeru je v Task Executoru Engine přiděleno jedinečné číslo, na
+ základě kterého jej můžeme odlišit od ostatních Workerů.
+ Číslo není generováno náhodně, prvnímu Workeru, který prochází Task Executorem
+ Engine je přidělena jednička a s příbývajícím počtem Workerů toto číslo
+ postupně roste vždy o jedna.
+\end_layout
+
+\begin_layout Section
+Nový status úlohy
+\end_layout
+
+\begin_layout Standard
+Status úlohy se průchodem Perun Engine několikrát mění.
+ Mohou nastat čtyři různé stavy, ve kterých se úloha nachází, a to:
+\end_layout
+
+\begin_layout Itemize
+planned - úloha se stává plánovanou po příchodu do Perun Engine
+\end_layout
+
+\begin_layout Itemize
+processing - úloha se začíná zpracovávat po vstupu do Task Executoru Engine
+\end_layout
+
+\begin_layout Itemize
+done - úloha prošla Task Executorem a je dokončena
+\end_layout
+
+\begin_layout Itemize
+error - úloha prošla Task Executorem a v průběhu jejího spuštění se vyskytla
+ chyba, proto nebyla řádně dokončena
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Při implementaci monitorovací komponenty jsem narazila na jistou nepřehlednost
+ v informacích o Workerech.
+ Parametry Workerů se od sebe dostatečně nelišili a nebylo možné rozpoznat,
+ zda daný Worker čeká v interní frontě nebo zda právě probíhá.
+ 
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Proto byl zavedený nový status úlohy, a to status running neboli běžící.
+ Úloha, která má status running, o sobě vypovídá, že je právě v daném okamžiku
+ spuštěna a zatím její běh nebyl dokončen.
+ Změna statusu je realizována v třídě Worker a to ihned při zahájení spuštění
+ Workeru zavoláním metody run().
+ 
+\end_layout
+
+\begin_layout Section
+Změna statusu úlohy
+\end_layout
+
+\begin_layout Standard
+Jedním z parametrů úlohy je její status, který se při průchodu Perun Engine
+ několikrát změní, jak bylo zmíněno výše.
+ Pokud chce monitorovací komponenta v určitém čase získat všechny informace
+ o všech Workerech, kteří byli a jsou spuštěny, získávání těchto informací
+ zabere také nějaký čas.
+ Je nutné si uvědomit, že délka běhu Workeru se pohybuje v řádu milisekund
+ a Workery je možné pouštět paralelně.
+ 
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Při implementaci monitoringu bylo zjištěno, že některé úlohy mohou v průběhu
+ výpisu informací změnit svůj stav a tím se přesunout do jiné kolekce.
+ To nemůžeme dopustit, protože potom dochází k velmi snadnému rozbití informací
+ a získané údaje s největší pravděpodobností nebudu pravdivé.
+ Operace s Workery proto bylo nutné v průběhu výpisu uzamknout, aby se tomuto
+ problému předešlo.
+\end_layout
+
+\begin_layout Subsection*
+Zámek
+\end_layout
+
+\begin_layout Standard
+Pro uzamknutí Task Executoru v průběhu získávání informací o něm byla využita
+ třída zámku 
 \begin_inset Newpage newpage
 \end_inset
 
